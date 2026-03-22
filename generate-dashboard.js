@@ -1,0 +1,294 @@
+const fs = require('fs');
+
+// 读取数据
+const rawData = fs.readFileSync('data.json', 'utf8');
+const data = JSON.parse(rawData);
+
+// 生成HTML
+const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+const date = new Date(data.date);
+const dateStr = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 星期${weekdays[date.getDay()]}`;
+
+const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体重管理日报 - ${data.date}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .dashboard {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+        .header .date { font-size: 14px; opacity: 0.9; }
+        .weight-section {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .current-weight {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            line-height: 1;
+        }
+        .weight-unit { font-size: 16px; color: #999; margin-left: 5px; }
+        .weight-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .stat { text-align: center; }
+        .stat-value { font-size: 20px; font-weight: 600; color: #333; }
+        .stat-label { font-size: 12px; color: #999; margin-top: 5px; }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .section {
+            padding: 20px 25px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .section:last-child { border-bottom: none; }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .meal-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f8f8f8;
+        }
+        .meal-item:last-child { border-bottom: none; }
+        .meal-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-right: 12px;
+        }
+        .meal-icon.ok { background: #e8f5e9; }
+        .meal-icon.warn { background: #fff3e0; }
+        .meal-icon.skip { background: #ffebee; }
+        .meal-info { flex: 1; }
+        .meal-name { font-size: 14px; color: #333; font-weight: 500; }
+        .meal-detail { font-size: 12px; color: #999; margin-top: 2px; }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .status-badge.ok { background: #e8f5e9; color: #2e7d32; }
+        .status-badge.warn { background: #fff3e0; color: #ef6c00; }
+        .status-badge.skip { background: #ffebee; color: #c62828; }
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .exercise-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        .exercise-icon.missed { background: #ffebee; }
+        .exercise-info { flex: 1; }
+        .exercise-name { font-size: 14px; font-weight: 600; color: #333; }
+        .exercise-detail { font-size: 12px; color: #666; margin-top: 2px; }
+        .advice-list { list-style: none; }
+        .advice-list li {
+            padding: 10px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 14px;
+            color: #555;
+            border-bottom: 1px solid #f8f8f8;
+        }
+        .advice-list li:last-child { border-bottom: none; }
+        .advice-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .calories-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+        .calories-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 13px;
+            border-bottom: 1px dashed #ddd;
+        }
+        .calories-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>📊 体重管理日报</h1>
+            <div class="date">${dateStr}</div>
+        </div>
+        
+        <div class="weight-section">
+            <div class="current-weight">
+                ${data.weight.toFixed(1)}<span class="weight-unit">kg</span>
+            </div>
+            <div class="weight-stats">
+                <div class="stat">
+                    <div class="stat-value">60.0</div>
+                    <div class="stat-label">目标体重</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">-${(data.weight - 60).toFixed(1)}</div>
+                    <div class="stat-label">还需减重</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">89</div>
+                    <div class="stat-label">剩余天数</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">🍽️ 今日饮食</div>
+            <div class="meal-item">
+                <div class="meal-icon ok">🌅</div>
+                <div class="meal-info">
+                    <div class="meal-name">早餐</div>
+                    <div class="meal-detail">${data.breakfast}</div>
+                </div>
+                <span class="status-badge ok">良好</span>
+            </div>
+            <div class="meal-item">
+                <div class="meal-icon ok">🌞</div>
+                <div class="meal-info">
+                    <div class="meal-name">午餐</div>
+                    <div class="meal-detail">${data.lunch}</div>
+                </div>
+                <span class="status-badge ok">轻食</span>
+            </div>
+            <div class="meal-item">
+                <div class="meal-icon ok">🌙</div>
+                <div class="meal-info">
+                    <div class="meal-name">晚餐</div>
+                    <div class="meal-detail">${data.dinner}</div>
+                </div>
+                <span class="status-badge ok">控制</span>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">💪 运动记录</div>
+            <div class="exercise-item">
+                <div class="exercise-icon ${data.exerciseTime > 0 ? '' : 'missed'}">${data.exerciseTime > 0 ? '🚴' : '❌'}</div>
+                <div class="exercise-info">
+                    <div class="exercise-name" style="${data.exerciseTime > 0 ? '' : 'color: #c62828;'}">${data.exercise}</div>
+                    <div class="exercise-detail">${data.exerciseTime > 0 ? data.exerciseTime + '分钟 · 已完成' : '明天必须补上！建议HIIT 25分钟'}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">😴 睡眠情况</div>
+            <div class="exercise-item">
+                <div class="exercise-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">💤</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">睡眠充足</div>
+                    <div class="exercise-detail">${data.sleep}小时 · 建议7-9小时</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">📋 明日建议</div>
+            <ul class="advice-list">
+                <li><strong>必须运动！</strong>今天没做，明天HIIT 25分钟补上</li>
+                <li>早餐：保持，贝果换全麦更好</li>
+                <li>午餐：正常吃，别只吃坚果</li>
+                <li>晚餐：继续控制600卡以内</li>
+                <li>继续多喝水，保持7-8杯</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            由 OpenClaw101 自动生成 · ${data.date} 20:00更新<br>
+            每晚8点自动更新
+        </div>
+    </div>
+</body>
+</html>`;
+
+// 写入文件
+fs.writeFileSync('index.html', html);
+console.log('Dashboard generated successfully!');
