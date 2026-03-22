@@ -1,70 +1,15 @@
-name: Update Weight Dashboard
+const fs = require('fs');
 
-on:
-  schedule:
-    # 每天晚上8点运行 (UTC时间12:00)
-    - cron: '0 12 * * *'
-  workflow_dispatch:
+// 读取数据
+const rawData = fs.readFileSync('data.json', 'utf8');
+const data = JSON.parse(rawData);
 
-jobs:
-  update-dashboard:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        
-    - name: Install dependencies
-      run: |
-        npm install axios
-        
-    - name: Fetch data and update dashboard
-      env:
-        FEISHU_TABLE_URL: ${{ secrets.FEISHU_TABLE_URL }}
-      run: |
-        node << 'EOF'
-        const fs = require('fs');
-        
-        // 模拟从飞书表格读取数据（实际需要API）
-        // 这里先用静态数据，后续接入飞书API
-        const today = new Date().toISOString().split('T')[0];
-        
-        // 读取本地数据文件（由外部更新）
-        let data = {};
-        try {
-          const rawData = fs.readFileSync('data.json', 'utf8');
-          data = JSON.parse(rawData);
-        } catch (e) {
-          console.log('No data file found, using default');
-          data = {
-            date: today,
-            weight: 67.0,
-            breakfast: '酸奶+蓝莓+熏肠肉松贝果+咖啡',
-            lunch: '坚果+葡萄干 22克',
-            dinner: '山药+红薯叶+鱿鱼+牛肉+鱼',
-            exercise: '未运动',
-            exerciseTime: 0,
-            sleep: 9,
-            water: 8
-          };
-        }
-        
-        // 生成HTML
-        const html = generateHTML(data);
-        fs.writeFileSync('index.html', html);
-        console.log('Dashboard updated successfully');
-        
-        function generateHTML(data) {
-          const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-          const date = new Date(data.date);
-          const dateStr = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 星期${weekdays[date.getDay()]}`;
-          
-          return `<!DOCTYPE html>
+// 生成HTML
+const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+const date = new Date(data.date);
+const dateStr = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 星期${weekdays[date.getDay()]}`;
+
+const html = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -343,13 +288,7 @@ jobs:
     </div>
 </body>
 </html>`;
-        }
-        EOF
-        
-    - name: Commit and push changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add index.html
-        git diff --quiet && git diff --staged --quiet || git commit -m "Update dashboard for $(date +%Y-%m-%d)"
-        git push
+
+// 写入文件
+fs.writeFileSync('index.html', html);
+console.log('Dashboard generated successfully!');
