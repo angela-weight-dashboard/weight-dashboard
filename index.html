@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>体重管理日报 - 3月22日</title>
+    <title>体重管理日报 - 2025-03-22</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -33,15 +29,8 @@
             padding: 25px;
             text-align: center;
         }
-        .header h1 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        .header .date {
-            font-size: 14px;
-            opacity: 0.9;
-        }
+        .header h1 { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
+        .header .date { font-size: 14px; opacity: 0.9; }
         .weight-section {
             padding: 25px;
             text-align: center;
@@ -53,29 +42,15 @@
             color: #667eea;
             line-height: 1;
         }
-        .weight-unit {
-            font-size: 16px;
-            color: #999;
-            margin-left: 5px;
-        }
+        .weight-unit { font-size: 16px; color: #999; margin-left: 5px; }
         .weight-stats {
             display: flex;
             justify-content: space-around;
             margin-top: 20px;
         }
-        .stat {
-            text-align: center;
-        }
-        .stat-value {
-            font-size: 20px;
-            font-weight: 600;
-            color: #333;
-        }
-        .stat-label {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-        }
+        .stat { text-align: center; }
+        .stat-value { font-size: 20px; font-weight: 600; color: #333; }
+        .stat-label { font-size: 12px; color: #999; margin-top: 5px; }
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -95,9 +70,7 @@
             padding: 20px 25px;
             border-bottom: 1px solid #f0f0f0;
         }
-        .section:last-child {
-            border-bottom: none;
-        }
+        .section:last-child { border-bottom: none; }
         .section-title {
             font-size: 14px;
             font-weight: 600;
@@ -113,9 +86,7 @@
             padding: 10px 0;
             border-bottom: 1px solid #f8f8f8;
         }
-        .meal-item:last-child {
-            border-bottom: none;
-        }
+        .meal-item:last-child { border-bottom: none; }
         .meal-icon {
             width: 32px;
             height: 32px;
@@ -129,37 +100,18 @@
         .meal-icon.ok { background: #e8f5e9; }
         .meal-icon.warn { background: #fff3e0; }
         .meal-icon.skip { background: #ffebee; }
-        .meal-info {
-            flex: 1;
-        }
-        .meal-name {
-            font-size: 14px;
-            color: #333;
-            font-weight: 500;
-        }
-        .meal-detail {
-            font-size: 12px;
-            color: #999;
-            margin-top: 2px;
-        }
+        .meal-info { flex: 1; }
+        .meal-name { font-size: 14px; color: #333; font-weight: 500; }
+        .meal-detail { font-size: 12px; color: #999; margin-top: 2px; }
         .status-badge {
             padding: 4px 10px;
             border-radius: 12px;
             font-size: 11px;
             font-weight: 500;
         }
-        .status-badge.ok {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-        .status-badge.warn {
-            background: #fff3e0;
-            color: #ef6c00;
-        }
-        .status-badge.skip {
-            background: #ffebee;
-            color: #c62828;
-        }
+        .status-badge.ok { background: #e8f5e9; color: #2e7d32; }
+        .status-badge.warn { background: #fff3e0; color: #ef6c00; }
+        .status-badge.skip { background: #ffebee; color: #c62828; }
         .exercise-item {
             display: flex;
             align-items: center;
@@ -179,25 +131,11 @@
             font-size: 20px;
             margin-right: 12px;
         }
-        .exercise-icon.missed {
-            background: #ffebee;
-        }
-        .exercise-info {
-            flex: 1;
-        }
-        .exercise-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-        }
-        .exercise-detail {
-            font-size: 12px;
-            color: #666;
-            margin-top: 2px;
-        }
-        .advice-list {
-            list-style: none;
-        }
+        .exercise-icon.missed { background: #ffebee; }
+        .exercise-info { flex: 1; }
+        .exercise-name { font-size: 14px; font-weight: 600; color: #333; }
+        .exercise-detail { font-size: 12px; color: #666; margin-top: 2px; }
+        .advice-list { list-style: none; }
         .advice-list li {
             padding: 10px 0;
             padding-left: 24px;
@@ -206,9 +144,7 @@
             color: #555;
             border-bottom: 1px solid #f8f8f8;
         }
-        .advice-list li:last-child {
-            border-bottom: none;
-        }
+        .advice-list li:last-child { border-bottom: none; }
         .advice-list li::before {
             content: "→";
             position: absolute;
@@ -274,12 +210,12 @@
         </div>
         
         <div class="section">
-            <div class="section-title">🍽️ 今日饮食 (~1150卡)</div>
+            <div class="section-title">🍽️ 今日饮食</div>
             <div class="meal-item">
                 <div class="meal-icon ok">🌅</div>
                 <div class="meal-info">
                     <div class="meal-name">早餐</div>
-                    <div class="meal-detail">酸奶+蓝莓+熏肠肉松贝果+咖啡 (~400卡)</div>
+                    <div class="meal-detail">酸奶+蓝莓+熏肠肉松贝果+咖啡</div>
                 </div>
                 <span class="status-badge ok">良好</span>
             </div>
@@ -287,7 +223,7 @@
                 <div class="meal-icon ok">🌞</div>
                 <div class="meal-info">
                     <div class="meal-name">午餐</div>
-                    <div class="meal-detail">坚果+葡萄干 22克 (~150卡)</div>
+                    <div class="meal-detail">坚果+葡萄干 22克</div>
                 </div>
                 <span class="status-badge ok">轻食</span>
             </div>
@@ -295,28 +231,9 @@
                 <div class="meal-icon ok">🌙</div>
                 <div class="meal-info">
                     <div class="meal-name">晚餐</div>
-                    <div class="meal-detail">山药+红薯叶+鱿鱼+牛肉+鱼 (~600卡)</div>
+                    <div class="meal-detail">山药+红薯叶+鱿鱼+牛肉+鱼</div>
                 </div>
                 <span class="status-badge ok">控制</span>
-            </div>
-            
-            <div class="calories-section">
-                <div class="calories-row">
-                    <span>基础代谢</span>
-                    <span>1300 卡</span>
-                </div>
-                <div class="calories-row">
-                    <span>今日摄入</span>
-                    <span>1150 卡</span>
-                </div>
-                <div class="calories-row">
-                    <span>运动消耗</span>
-                    <span>0 卡 ⚠️</span>
-                </div>
-                <div class="calories-row">
-                    <span>热量缺口</span>
-                    <span>350 卡</span>
-                </div>
             </div>
         </div>
         
@@ -325,7 +242,7 @@
             <div class="exercise-item">
                 <div class="exercise-icon missed">❌</div>
                 <div class="exercise-info">
-                    <div class="exercise-name" style="color: #c62828;">今日未运动</div>
+                    <div class="exercise-name" style="color: #c62828;">未运动</div>
                     <div class="exercise-detail">明天必须补上！建议HIIT 25分钟</div>
                 </div>
             </div>
@@ -337,25 +254,24 @@
                 <div class="exercise-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">💤</div>
                 <div class="exercise-info">
                     <div class="exercise-name">睡眠充足</div>
-                    <div class="exercise-detail">23:00 - 08:00 · 9小时</div>
+                    <div class="exercise-detail">9小时 · 建议7-9小时</div>
                 </div>
             </div>
         </div>
         
         <div class="section">
-            <div class="section-title">📋 明日建议 (3月23日)</div>
+            <div class="section-title">📋 明日建议</div>
             <ul class="advice-list">
                 <li><strong>必须运动！</strong>今天没做，明天HIIT 25分钟补上</li>
                 <li>早餐：保持，贝果换全麦更好</li>
                 <li>午餐：正常吃，别只吃坚果</li>
                 <li>晚餐：继续控制600卡以内</li>
                 <li>继续多喝水，保持7-8杯</li>
-                <li>目标：缺口600-700卡，每周减0.5kg</li>
             </ul>
         </div>
         
         <div class="footer">
-            由 OpenClaw101 生成 · 3月22日 20:15更新<br>
+            由 OpenClaw101 自动生成 · 2025-03-22 20:00更新<br>
             每晚8点自动更新
         </div>
     </div>
