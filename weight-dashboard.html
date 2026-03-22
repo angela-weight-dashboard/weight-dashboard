@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体重管理日报 - 3月22日</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .dashboard {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .header .date {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .weight-section {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .current-weight {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+            line-height: 1;
+        }
+        .weight-unit {
+            font-size: 16px;
+            color: #999;
+            margin-left: 5px;
+        }
+        .weight-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            width: 12%;
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .section {
+            padding: 20px 25px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .meal-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f8f8f8;
+        }
+        .meal-item:last-child {
+            border-bottom: none;
+        }
+        .meal-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-right: 12px;
+        }
+        .meal-icon.ok { background: #e8f5e9; }
+        .meal-icon.warn { background: #fff3e0; }
+        .meal-icon.skip { background: #ffebee; }
+        .meal-info {
+            flex: 1;
+        }
+        .meal-name {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        .meal-detail {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .status-badge.ok {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status-badge.warn {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        .status-badge.skip {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+        .exercise-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        .exercise-info {
+            flex: 1;
+        }
+        .exercise-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        .exercise-detail {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .advice-list {
+            list-style: none;
+        }
+        .advice-list li {
+            padding: 10px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 14px;
+            color: #555;
+            border-bottom: 1px solid #f8f8f8;
+        }
+        .advice-list li:last-child {
+            border-bottom: none;
+        }
+        .advice-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>📊 体重管理日报</h1>
+            <div class="date">2025年3月22日 星期日</div>
+        </div>
+        
+        <div class="weight-section">
+            <div class="current-weight">
+                67.0<span class="weight-unit">kg</span>
+            </div>
+            <div class="weight-stats">
+                <div class="stat">
+                    <div class="stat-value">60.0</div>
+                    <div class="stat-label">目标体重</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">-7.0</div>
+                    <div class="stat-label">还需减重</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">90</div>
+                    <div class="stat-label">剩余天数</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">🍽️ 今日饮食</div>
+            <div class="meal-item">
+                <div class="meal-icon ok">🌅</div>
+                <div class="meal-info">
+                    <div class="meal-name">早餐</div>
+                    <div class="meal-detail">酸奶+肉松贝果+坚果+蓝莓+咖啡</div>
+                </div>
+                <span class="status-badge ok">良好</span>
+            </div>
+            <div class="meal-item">
+                <div class="meal-icon skip">🌞</div>
+                <div class="meal-info">
+                    <div class="meal-name">午餐</div>
+                    <div class="meal-detail">未进食（轻断食）</div>
+                </div>
+                <span class="status-badge skip">跳过</span>
+            </div>
+            <div class="meal-item">
+                <div class="meal-icon warn">🌙</div>
+                <div class="meal-info">
+                    <div class="meal-name">晚餐</div>
+                    <div class="meal-detail">山药+米饭+青菜+鱼+腊肉</div>
+                </div>
+                <span class="status-badge warn">注意</span>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">💪 运动记录</div>
+            <div class="exercise-item">
+                <div class="exercise-icon">🚴</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">动感单车 HIIT</div>
+                    <div class="exercise-detail">20-30分钟 · 间歇训练</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">😴 睡眠情况</div>
+            <div class="exercise-item">
+                <div class="exercise-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">💤</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">睡眠充足</div>
+                    <div class="exercise-detail">23:00 - 08:00 · 9小时</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">📋 明日建议</div>
+            <ul class="advice-list">
+                <li>晚餐主食二选一：米饭或山药，不要双碳水</li>
+                <li>补上午餐，避免过度饥饿</li>
+                <li>腊肉换成瘦肉或豆腐，减少盐分</li>
+                <li>今天运动了，明天休息或轻度拉伸</li>
+                <li>继续多喝水，保持7-8杯</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            由 OpenClaw101 生成 · 每晚8点更新
+        </div>
+    </div>
+</body>
+</html>
