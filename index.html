@@ -85,7 +85,7 @@
             overflow: hidden;
         }
         .progress-fill {
-            width: 12%;
+            width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #667eea, #764ba2);
             border-radius: 4px;
@@ -179,6 +179,9 @@
             font-size: 20px;
             margin-right: 12px;
         }
+        .exercise-icon.missed {
+            background: #ffebee;
+        }
         .exercise-info {
             flex: 1;
         }
@@ -213,6 +216,24 @@
             color: #667eea;
             font-weight: 600;
         }
+        .calories-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+        .calories-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 13px;
+            border-bottom: 1px dashed #ddd;
+        }
+        .calories-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: #667eea;
+        }
         .footer {
             background: #f8f9fa;
             padding: 15px 25px;
@@ -226,7 +247,7 @@
     <div class="dashboard">
         <div class="header">
             <h1>📊 体重管理日报</h1>
-            <div class="date">2025年3月22日 星期日</div>
+            <div class="date">2025年3月22日 星期六</div>
         </div>
         
         <div class="weight-section">
@@ -243,50 +264,69 @@
                     <div class="stat-label">还需减重</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-value">90</div>
+                    <div class="stat-value">89</div>
                     <div class="stat-label">剩余天数</div>
                 </div>
             </div>
             <div class="progress-bar">
-                <div class="progress-fill"></div>
+                <div class="progress-fill" style="width: 0%"></div>
             </div>
         </div>
         
         <div class="section">
-            <div class="section-title">🍽️ 今日饮食</div>
+            <div class="section-title">🍽️ 今日饮食 (~1150卡)</div>
             <div class="meal-item">
                 <div class="meal-icon ok">🌅</div>
                 <div class="meal-info">
                     <div class="meal-name">早餐</div>
-                    <div class="meal-detail">酸奶+肉松贝果+坚果+蓝莓+咖啡</div>
+                    <div class="meal-detail">酸奶+蓝莓+熏肠肉松贝果+咖啡 (~400卡)</div>
                 </div>
                 <span class="status-badge ok">良好</span>
             </div>
             <div class="meal-item">
-                <div class="meal-icon skip">🌞</div>
+                <div class="meal-icon ok">🌞</div>
                 <div class="meal-info">
                     <div class="meal-name">午餐</div>
-                    <div class="meal-detail">未进食（轻断食）</div>
+                    <div class="meal-detail">坚果+葡萄干 22克 (~150卡)</div>
                 </div>
-                <span class="status-badge skip">跳过</span>
+                <span class="status-badge ok">轻食</span>
             </div>
             <div class="meal-item">
-                <div class="meal-icon warn">🌙</div>
+                <div class="meal-icon ok">🌙</div>
                 <div class="meal-info">
                     <div class="meal-name">晚餐</div>
-                    <div class="meal-detail">山药+米饭+青菜+鱼+腊肉</div>
+                    <div class="meal-detail">山药+红薯叶+鱿鱼+牛肉+鱼 (~600卡)</div>
                 </div>
-                <span class="status-badge warn">注意</span>
+                <span class="status-badge ok">控制</span>
+            </div>
+            
+            <div class="calories-section">
+                <div class="calories-row">
+                    <span>基础代谢</span>
+                    <span>1300 卡</span>
+                </div>
+                <div class="calories-row">
+                    <span>今日摄入</span>
+                    <span>1150 卡</span>
+                </div>
+                <div class="calories-row">
+                    <span>运动消耗</span>
+                    <span>0 卡 ⚠️</span>
+                </div>
+                <div class="calories-row">
+                    <span>热量缺口</span>
+                    <span>350 卡</span>
+                </div>
             </div>
         </div>
         
         <div class="section">
             <div class="section-title">💪 运动记录</div>
             <div class="exercise-item">
-                <div class="exercise-icon">🚴</div>
+                <div class="exercise-icon missed">❌</div>
                 <div class="exercise-info">
-                    <div class="exercise-name">动感单车 HIIT</div>
-                    <div class="exercise-detail">20-30分钟 · 间歇训练</div>
+                    <div class="exercise-name" style="color: #c62828;">今日未运动</div>
+                    <div class="exercise-detail">明天必须补上！建议HIIT 25分钟</div>
                 </div>
             </div>
         </div>
@@ -303,18 +343,20 @@
         </div>
         
         <div class="section">
-            <div class="section-title">📋 明日建议</div>
+            <div class="section-title">📋 明日建议 (3月23日)</div>
             <ul class="advice-list">
-                <li>晚餐主食二选一：米饭或山药，不要双碳水</li>
-                <li>补上午餐，避免过度饥饿</li>
-                <li>腊肉换成瘦肉或豆腐，减少盐分</li>
-                <li>今天运动了，明天休息或轻度拉伸</li>
+                <li><strong>必须运动！</strong>今天没做，明天HIIT 25分钟补上</li>
+                <li>早餐：保持，贝果换全麦更好</li>
+                <li>午餐：正常吃，别只吃坚果</li>
+                <li>晚餐：继续控制600卡以内</li>
                 <li>继续多喝水，保持7-8杯</li>
+                <li>目标：缺口600-700卡，每周减0.5kg</li>
             </ul>
         </div>
         
         <div class="footer">
-            由 OpenClaw101 生成 · 每晚8点更新
+            由 OpenClaw101 生成 · 3月22日 20:15更新<br>
+            每晚8点自动更新
         </div>
     </div>
 </body>
